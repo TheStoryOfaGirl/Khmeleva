@@ -15,11 +15,22 @@ from openpyxl.styles.numbers import FORMAT_PERCENTAGE_00
 
 
 class InputParam:
+    """Получение вводимых параметров
+
+    Attributes:
+        param(Tuple[str, str, str, str, List[int], str]): вводимые параметры
+    """
     def __init__(self):
+        """Инициализирует объект InputParam
+       """
         self.param = InputParam.get_params()
 
     @staticmethod
     def get_params():
+        """Получает вводимые параметры
+       Returns:
+           param(Tuple[str, str, str, str, List[int], str]): вводимые параметры
+       """
         file_name = input('Введите название файла: ')
         parameter = input('Введите параметр фильтрации: ')
         sort_param = input('Введите параметр сортировки: ')
@@ -32,7 +43,24 @@ class InputParam:
         return file_name, parameter, sort_param, sort_reverse, gap_rows, new_columns
 
 class InputConnectVacancy:
+    """Формирование таблицы PrettyTable с вакансиями
+
+    Attributes:
+        filter_p(str): Параметр фильтрации
+        sort_p(str): Параметр сортировки
+        sort_r(str or bool): Параметр обратной сортировки
+        gap_rows (List[int]): Промежуток выводимых колонок
+        columns(str or List[str]): Названия выводимых колонок
+    """
     def __init__(self, filter_p, sort_p, sort_r, gap_rows, columns):
+        """Инициализирует объект InputConnectVacancy
+        Args:
+            filter_p(str): Параметр фильтрации
+            sort_p(str): Параметр сортировки
+            sort_r(str or bool): Параметр обратной сортировки
+            gap_rows (List[int]): Промежуток выводимых колонок
+            columns(str or List[str]): Названия выводимых колонок
+        """
         self.filter_p = filter_p
         self.sort_p = sort_p
         self.sort_r = sort_r
@@ -40,7 +68,21 @@ class InputConnectVacancy:
         self.columns = columns
 
     def formatter(self, vacancy):
+        """Осуществляет форматирование необходимых полей
+
+        Args:
+            vacancy(List[Vacancy]): Вакансия
+        Returns:
+            List[Any]: Список отформатированных полей вакансии
+        """
         def check_salary(salary):
+            """Форматирует зараплату
+
+            Args:
+                salary(Salary): Информация о зарплате
+            Returns:
+                str: Отформатированная информация о зарплате
+            """
             new_salary_from = int(float(salary.salary_from))
             new_salary_to = int(float(salary.salary_to))
             new_salary_from = f'{new_salary_from // 1000} {str(new_salary_from)[-3:]}' if float(
@@ -51,7 +93,14 @@ class InputConnectVacancy:
             result = f'{new_salary_from} - {new_salary_to} ({transl_currency[salary.salary_currency]}) ({new_salary_gross})'
             return result
 
-        def check_published(date): return datetime.datetime.strptime(date, '%Y-%m-%dT%H:%M:%S%z').strftime('%d.%m.%Y')
+        def check_published(date):
+            """Форматирует дату публикации
+            Args:
+                date(str): Дата публикации
+            Returns:
+                str: Отформатированная дата публикации
+            """
+            return datetime.datetime.strptime(date, '%Y-%m-%dT%H:%M:%S%z').strftime('%d.%m.%Y')
 
         result = [vacancy.name, vacancy.description, "\n".join(vacancy.key_skills),
                   transl_experience[vacancy.experience_id],
@@ -60,6 +109,8 @@ class InputConnectVacancy:
         return result
 
     def check_param(self):
+        """Проверка параметров на корректность
+        """
         if ': ' not in self.filter_p and self.filter_p != '':
             print('Формат ввода некорректен')
             exit()
@@ -78,7 +129,15 @@ class InputConnectVacancy:
             self.columns = self.columns.split(', ')
             self.columns.insert(0, "№")
 
-    def data_table(self, list_vacancies, f_param):
+    def data_filter(self, list_vacancies, f_param):
+        """Осуществляет фильтрацию списка вакансий
+
+        Args:
+            list_vacancies(List[Vacancy]): Список вакансий
+            f_param(List[str]): Параметры фильтрации
+        Returns:
+            List[Vacancy]: Отфильтрованный список вакансий
+        """
         if f_param[0] == 'Навыки':
             f_param[1] = f_param[1].split(', ')
         if f_param[0] == 'Оклад':
@@ -106,6 +165,15 @@ class InputConnectVacancy:
         return list_vacancies
 
     def sort_data(self, list_vacancies, sort_par, sort_reverse):
+        """Осуществляет сортировку списка вакансий по параметрам
+
+        Args:
+            list_vacancies(List[Vacancy]): Список вакансий
+            sort_par(str): Параметр сортировки
+            sort_reverse(str): Параметр обратной сортировки
+        Returns:
+            List[Vacancy]: Отсортированный список вакансий
+        """
         if sort_par == 'Навыки':
             list_vacancies.sort(key=lambda vac: len(vac.key_skills), reverse=sort_reverse)
         elif sort_par == 'Оклад':
@@ -122,8 +190,13 @@ class InputConnectVacancy:
         return list_vacancies
 
     def print_vacancies(self, list_vac):
+        """Формирует таблицу PrettyTable по отсортированному и отфильтрованному списку вакансий
+
+        Args:
+            list_vac(List[Vacancy]): Список вакансий
+        """
         self.gap_rows.append(len(list_vac) + 1)
-        list_vac = list_vac if len(self.filter_p) != 2 else self.data_table(list_vac, self.filter_p)
+        list_vac = list_vac if len(self.filter_p) != 2 else self.data_filter(list_vac, self.filter_p)
         list_vac = 'Ничего не найдено' if len(list_vac) == 0 else list_vac
         if type(list_vac) is str:
             print(list_vac)
@@ -150,7 +223,15 @@ class InputConnectVacancy:
 
 
 class Report:
+    """Формирует отчеты и графики
+    """
     def generate_excel(self, key_vac, statistics):
+        """Формирует Excel-таблицу
+
+        Args:
+            key_vac(str): Название вакансии
+            statistics(List[Dict[str, str]]): Статистика по вакансиям
+        """
         wb = Workbook()
         thins = Side(border_style="thin", color="000000")
         sh1 = wb['Sheet']
@@ -188,6 +269,12 @@ class Report:
         wb.save('report.xlsx')
 
     def generate_image(self, key_vac, statistics):
+        """Формирует PNG-файл с графиками
+
+        Args:
+            key_vac(str): Название вакансии
+            statistics(List[Dict[str, str]]): Статистика по вакансиям
+        """
         matplotlib.rc('font', size=8)
         labels = statistics[0].keys()
         avg_salary = statistics[0].values()
@@ -235,7 +322,12 @@ class Report:
         fig.tight_layout()
         plt.savefig('graph.png')
 
-    def generate_pdf(self, name_vac, statistics):
+    def generate_pdf(self, name_vac):
+        """Формирует PDF-файл с графиками и отчетами
+
+        Args:
+            name_vac(str): Название вакансии
+        """
         env = Environment(loader=FileSystemLoader('.'))
         template = env.get_template("pdf_template.html")
         out = xlsx2html('report.xlsx', sheet='Статистика по годам')
@@ -252,7 +344,18 @@ class Report:
 
 
 class InputConectStatistics:
+    """Формирует статистику по вакансиям
+    """
     def get_salary_level(self, list_vac, key, param_vac=''):
+        """Формирует статистику, связанную с зарплатами
+
+        Args:
+            list_vac(List[Vacancy]): Список вакансий
+            key(str): Поле вакансии
+            param_vac(str): Параметр с названием вакансии
+        Returns:
+            Dict[str, str]: Cтатистика, связанная с зарплатами
+        """
         result = {}
         for vacancy in list_vac:
             if vacancy.__getattribute__(key) not in result.keys():
@@ -265,6 +368,16 @@ class InputConectStatistics:
         return result
 
     def get_count_vacancy(self, list_vac, key, dataSet, param_vac=''):
+        """Формирует статистику, связанную с количеством вакансий
+
+        Args:
+            list_vac(List[Vacancy]): Список вакансий
+            key(str): Поле вакансии
+            dataSet(DataSet): Данные из файла
+            param_vac(str): Параметр с названием вакансии
+        Returns:
+            Dict[str, str]: Cтатистика, связанная с количеством вакансий
+        """
         result = {}
         for vacancy in list_vac:
             if vacancy.__getattribute__(key) not in result.keys():
@@ -276,13 +389,78 @@ class InputConectStatistics:
             for key in result.keys():
                 result[key] = round(result[key] / len(dataSet.vacancies_objects), 4)
         return result
+    def check_published(self, date):
+        """Форматирует дату публикации
+        Args:
+            date(List[str]): Дата публикации
+        Returns:
+            str: Отформатированная дата публикации
+        """
+        return datetime.datetime.strptime(date, '%Y-%m-%dT%H:%M:%S%z').strftime('%Y')
+
+    def print_res(self, dataSet, outputer, vacancy_name):
+        """Осуществляет вывод статистики по вакансиям
+        Args:
+            dataSet(DataSet): Данные из файла
+            outputer(InputConectStatistics): Статистика по вакансиям
+            vacancy_name: Название вакансии
+        Returns:
+            List[Any]: Список статистик
+        """
+        for vac in dataSet.vacancies_objects:
+            vac.published_at = int(self.check_published(vac.published_at))
+        res_year = dict(
+            sorted(outputer.get_salary_level(dataSet.vacancies_objects, "published_at").items(), key=lambda x: x[0]))
+        print(f'Динамика уровня зарплат по годам: {res_year}')
+        res_vac = dict(
+            sorted(outputer.get_count_vacancy(dataSet.vacancies_objects, "published_at", dataSet).items(), key=lambda x: x[0]))
+        print(f'Динамика количества вакансий по годам: {res_vac}')
+        res_year_vac = dict(sorted(outputer.get_salary_level(dataSet.vacancies_objects, "published_at", vacancy_name).items(),
+                          key=lambda x: x[0]))
+        print(f'Динамика уровня зарплат по годам для выбранной профессии: {res_year_vac}')
+        res_vac_count = dict(sorted(outputer.get_count_vacancy(dataSet.vacancies_objects, "published_at", dataSet, vacancy_name).items(),
+                          key=lambda x: x[0]))
+        print(f'Динамика количества вакансий по годам для выбранной профессии: {res_vac_count}')
+        dict_city_count = {}
+        for vac in dataSet.vacancies_objects:
+            if vac.area_name not in dict_city_count.keys():
+                dict_city_count[vac.area_name] = 0
+            dict_city_count[vac.area_name] += 1
+        new_vacancies_objects = list(
+            filter(lambda vac: int(len(dataSet.vacancies_objects) * 0.01) <= dict_city_count[vac.area_name],
+                   dataSet.vacancies_objects))
+        res_city = dict(sorted(outputer.get_salary_level(new_vacancies_objects, "area_name").items(), key=lambda x: x[1],
+                          reverse=True)[:10])
+        print(f'Уровень зарплат по городам (в порядке убывания): {res_city}')
+        res_city_vac = dict(sorted(outputer.get_count_vacancy(new_vacancies_objects, "area_name", dataSet).items(), key=lambda x: x[1],
+                          reverse=True)[:10])
+        print(f'Доля вакансий по городам (в порядке убывания): {res_city_vac}')
+        return [res_year, res_year_vac, res_vac, res_vac_count, res_city, res_city_vac]
 
 class DataSet:
+    """Формирует список вакансий
+    Attributes:
+        file_name(str): Имя файла
+        vacancies_objects(List[Vacancy]): Список вакансий
+    """
     def __init__(self, file_name):
+        """Инициализирует объект DataSet
+
+        Args:
+            file_name(str): Имя файла
+        """
         self.file_name = file_name
         self.vacancies_objects = [Vacancy(vac) for vac in self.csv_filer(*self.csv_reader(file_name))]
 
     def csv_filer(self, reader, list_naming):
+        """Формирует список словарей по вакансиям
+
+        Args:
+            reader(List[List[str]]): Данные из файла
+            list_naming: Поля вакансии
+        Returns:
+            List[Dict[str, str]]: Список словарей по вакансиям
+        """
         res = [self.formatting_str(x) for x in reader if len(x) == len(list_naming) and x.count('') == 0]
         dic_result = []
         for line in res:
@@ -293,6 +471,13 @@ class DataSet:
         return dic_result
 
     def csv_reader(self, file_name):
+        """Считывает данные из файла
+
+        Args:
+            file_name(str): Название файла
+        Returns:
+            Tuple[List[str], List[List[str]]]: Названия полей и соответствующие им данные
+        """
         file_csv = open(file_name, encoding='utf_8_sig')
         reader_csv = csv.reader(file_csv)
         list_data = []
@@ -303,6 +488,13 @@ class DataSet:
         return data, columns
 
     def formatting_str(self, element):
+        """Очищает строку от HTML кода
+
+        Args:
+            element(List(str)): Строка, которую необходимо очистить
+        Returns:
+            str: Очищенная строка
+        """
         for i in range(len(element)):
             element[i] = re.sub(r'<.*?>', '', element[i])
             if '\n' not in element[i]:
@@ -311,17 +503,58 @@ class DataSet:
 
 
 class Salary:
+    """Класс для представления зарплаты.
+
+    Attributes:
+        salary_from(str): Нижняя граница вилки оклада
+        salary_to(str): Верхняя граница вилки оклада
+        salary_gross(str): Наличие налога
+        salary_currency(str): Валюта оклада
+    """
     def __init__(self, salary_from, salary_to, salary_gross, salary_currency):
+        """Инициализирует объект Salary
+
+        Args:
+            salary_from(str): Нижняя граница вилки оклада
+            salary_to(str): Верхняя граница вилки оклада
+            salary_gross(str): Наличие налога
+            salary_currency(str): Валюта оклада
+        """
         self.salary_from = salary_from
         self.salary_to = salary_to
         self.salary_gross = salary_gross
         self.salary_currency = salary_currency
 
     def do_rub(self, salary):
+        """Переводит в рубли при помощи словаря - currency_to_rub.
+
+        Args:
+            salary(float): Зарплата в другой валюте
+        Returns:
+            float: Перевод в рубли
+        """
         return salary * currency_to_rub[self.salary_currency]
 
 class Vacancy:
+    """Класс для представления вакансии
+
+    Attributes:
+        name (str): Название вакансии
+        description (str): Описание вакансии
+        key_skills (List[str]): Ключевые навыки
+        experience_id(str): Требуемый опыт
+        premium(str): Премиум-вакансия
+        employer_name(str): Название компании
+        salary(Salary): Информация о зарплате
+        area_name(str): Название города
+        published_at(str): Дата публикации
+    """
     def __init__(self, data_vac):
+        """Инициализирует объект Vacancy, проверяет наличие полей
+
+        Args:
+             data_vac (Dict[str, str]): Словарь, в котором описывается профессия. Ключи - названия полей, значения - соответствующая информация по полю
+        """
         self.name = data_vac['name']
         self.description = None if 'description' not in data_vac.keys() else data_vac['description']
         self.key_skills = None if 'key_skills' not in data_vac.keys() else data_vac['key_skills'].split('\n')
@@ -332,8 +565,6 @@ class Vacancy:
         self.salary = Salary(data_vac['salary_from'], data_vac['salary_to'], salary_gross, data_vac['salary_currency'])
         self.area_name = data_vac['area_name']
         self.published_at = data_vac['published_at']
-        self.vacancy_fields = [self.name, self.description, self.key_skills, self.experience_id, self.premium,
-                               self.employer_name, self.salary, self.area_name, self.published_at]
 
 
 currency_to_rub = {
@@ -401,41 +632,6 @@ reverse_transl = {"Название": "name",
                   "Дата публикации вакансии": "published_at",
                   "Идентификатор валюты оклада": "salary_currency"}
 
-class OutputConnect:
-    def check_published(self, date):
-        return datetime.datetime.strptime(date, '%Y-%m-%dT%H:%M:%S%z').strftime('%Y')
-
-    def print_res(self, dataSet, outputer, vacancy_name):
-        for vac in dataSet.vacancies_objects:
-            vac.published_at = int(self.check_published(vac.published_at))
-        res_year = dict(
-            sorted(outputer.get_salary_level(dataSet.vacancies_objects, "published_at").items(), key=lambda x: x[0]))
-        print(f'Динамика уровня зарплат по годам: {res_year}')
-        res_vac = dict(
-            sorted(outputer.get_count_vacancy(dataSet.vacancies_objects, "published_at", dataSet).items(), key=lambda x: x[0]))
-        print(f'Динамика количества вакансий по годам: {res_vac}')
-        res_year_vac = dict(sorted(outputer.get_salary_level(dataSet.vacancies_objects, "published_at", vacancy_name).items(),
-                          key=lambda x: x[0]))
-        print(f'Динамика уровня зарплат по годам для выбранной профессии: {res_year_vac}')
-        res_vac_count = dict(sorted(outputer.get_count_vacancy(dataSet.vacancies_objects, "published_at", dataSet, vacancy_name).items(),
-                          key=lambda x: x[0]))
-        print(f'Динамика количества вакансий по годам для выбранной профессии: {res_vac_count}')
-        dict_city_count = {}
-        for vac in dataSet.vacancies_objects:
-            if vac.area_name not in dict_city_count.keys():
-                dict_city_count[vac.area_name] = 0
-            dict_city_count[vac.area_name] += 1
-        new_vacancies_objects = list(
-            filter(lambda vac: int(len(dataSet.vacancies_objects) * 0.01) <= dict_city_count[vac.area_name],
-                   dataSet.vacancies_objects))
-        res_city = dict(sorted(outputer.get_salary_level(new_vacancies_objects, "area_name").items(), key=lambda x: x[1],
-                          reverse=True)[:10])
-        print(f'Уровень зарплат по городам (в порядке убывания): {res_city}')
-        res_city_vac = dict(sorted(outputer.get_count_vacancy(new_vacancies_objects, "area_name", dataSet).items(), key=lambda x: x[1],
-                          reverse=True)[:10])
-        print(f'Доля вакансий по городам (в порядке убывания): {res_city_vac}')
-        return [res_year, res_year_vac, res_vac, res_vac_count, res_city, res_city_vac]
-
 type_output = input('Введите данные для печати: ')
 if type_output == "Статистика":
     file_name = input('Введите название файла: ')
@@ -448,12 +644,11 @@ if type_output == "Статистика":
     if len(dataSet.vacancies_objects) == 0:
         print('Нет данных')
         exit()
-    inputer = OutputConnect()
-    statistics = inputer.print_res(dataSet, outputer, vacancy_name)
+    statistics = outputer.print_res(dataSet, outputer, vacancy_name)
     rp = Report()
     rp.generate_excel(vacancy_name, statistics)
     rp.generate_image(vacancy_name, statistics)
-    rp.generate_pdf(vacancy_name, statistics)
+    rp.generate_pdf(vacancy_name)
 if type_output == "Вакансии":
     params = InputParam()
     outputer = InputConnectVacancy(params.param[1], params.param[2], params.param[3], params.param[4], params.param[5])
