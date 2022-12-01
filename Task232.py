@@ -71,7 +71,7 @@ class InputConnectVacancy:
         """Осуществляет форматирование необходимых полей
 
         Args:
-            vacancy(List[Vacancy]): Вакансия
+            vacancy (Vacancy): Вакансия
         Returns:
             List[Any]: Список отформатированных полей вакансии
         """
@@ -86,12 +86,13 @@ class InputConnectVacancy:
             new_salary_from = int(float(salary.salary_from))
             new_salary_to = int(float(salary.salary_to))
             new_salary_from = f'{new_salary_from // 1000} {str(new_salary_from)[-3:]}' if float(
-                salary.salary_from) > 1000 else new_salary_from
+                salary.salary_from) >= 1000 else new_salary_from
             new_salary_to = f'{new_salary_to // 1000} {str(new_salary_to)[-3:]}' if float(
-                salary.salary_to) > 1000 else new_salary_to
+                salary.salary_to) >= 1000 else new_salary_to
             new_salary_gross = "Без вычета налогов" if transl_bool[salary.salary_gross] == 'Да' else "С вычетом налогов"
             result = f'{new_salary_from} - {new_salary_to} ({transl_currency[salary.salary_currency]}) ({new_salary_gross})'
             return result
+
 
         def check_published(date):
             """Форматирует дату публикации
@@ -170,7 +171,7 @@ class InputConnectVacancy:
         Args:
             list_vacancies(List[Vacancy]): Список вакансий
             sort_par(str): Параметр сортировки
-            sort_reverse(str): Параметр обратной сортировки
+            sort_reverse(bool): Параметр обратной сортировки
         Returns:
             List[Vacancy]: Отсортированный список вакансий
         """
@@ -491,9 +492,10 @@ class DataSet:
         """Очищает строку от HTML кода
 
         Args:
-            element(List(str)): Строка, которую необходимо очистить
+            element(List(str)): Список строк, которые необходимо очистить
         Returns:
-            str: Очищенная строка
+            str: Список очищенных строк
+
         """
         for i in range(len(element)):
             element[i] = re.sub(r'<.*?>', '', element[i])
@@ -532,8 +534,18 @@ class Salary:
             salary(float): Зарплата в другой валюте
         Returns:
             float: Перевод в рубли
+        >>> Salary('10', '1000', 'true', 'EUR').do_rub(1000.0)
+        59900.0
+        >>> Salary('10', '1000', 'true', 'RUR').do_rub(1000)
+        1000.0
+        >>> Salary('10', '1000', 'true', 'RUR').do_rub(1000)
+        1000
+        >>> Salary('10', '1000', 'true', '123').do_rub(1000.0)
+        Traceback (most recent call last):
+            ...
+        KeyError: '123'
         """
-        return salary * currency_to_rub[self.salary_currency]
+        return salary * float(currency_to_rub[self.salary_currency])
 
 class Vacancy:
     """Класс для представления вакансии
@@ -556,12 +568,12 @@ class Vacancy:
              data_vac (Dict[str, str]): Словарь, в котором описывается профессия. Ключи - названия полей, значения - соответствующая информация по полю
         """
         self.name = data_vac['name']
-        self.description = None if 'description' not in data_vac.keys() else data_vac['description']
-        self.key_skills = None if 'key_skills' not in data_vac.keys() else data_vac['key_skills'].split('\n')
-        self.experience_id = None if 'experience_id' not in data_vac.keys() else data_vac['experience_id']
-        self.premium = None if 'premium' not in data_vac.keys() else data_vac['premium']
-        self.employer_name = None if 'employer_name' not in data_vac.keys() else data_vac['employer_name']
-        salary_gross = None if 'salary_gross' not in data_vac.keys() else data_vac['salary_gross']
+        self.description = "Нет данных" if 'description' not in data_vac.keys() else data_vac['description']
+        self.key_skills = "Нет данных" if 'key_skills' not in data_vac.keys() else data_vac['key_skills'].split('\n')
+        self.experience_id = "Нет данных" if 'experience_id' not in data_vac.keys() else data_vac['experience_id']
+        self.premium = "Нет данных" if 'premium' not in data_vac.keys() else data_vac['premium']
+        self.employer_name = "Нет данных" if 'employer_name' not in data_vac.keys() else data_vac['employer_name']
+        salary_gross = "Нет данных" if 'salary_gross' not in data_vac.keys() else data_vac['salary_gross']
         self.salary = Salary(data_vac['salary_from'], data_vac['salary_to'], salary_gross, data_vac['salary_currency'])
         self.area_name = data_vac['area_name']
         self.published_at = data_vac['published_at']
@@ -597,7 +609,8 @@ dict_translation = {"name": "Название",
 transl_experience = {"noExperience": "Нет опыта",
                      "between1And3": "От 1 года до 3 лет",
                      "between3And6": "От 3 до 6 лет",
-                     "moreThan6": "Более 6 лет"}
+                     "moreThan6": "Более 6 лет",
+                     "Нет данных": "Нет данных"}
 
 weight_experience = {
     "noExperience": 0,
@@ -619,7 +632,8 @@ transl_currency = {"AZN": "Манаты",
 transl_bool = {"True": "Да",
                "TRUE": "Да",
                "False": "Нет",
-               "FALSE": "Нет"}
+               "FALSE": "Нет",
+               "Нет данных": "Нет данных"}
 
 reverse_transl = {"Название": "name",
                   "Описание": "description",
