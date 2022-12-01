@@ -119,7 +119,7 @@ class MyTestCase(unittest.TestCase):
     def test_formatter_check_false(self):
         vacancy = Vacancy({'name': 'Аналитик', 'description': 'Нет данных', 'key_skills': 'Python\nHTML',
                            'experience_id': 'between3And6', 'premium': 'False', 'employer_name': 'Нет данных',
-                           'salary_from': '1000', 'salary_to': '11000', 'salary_gross': 'False',
+                           'salary_from': '1000', 'salary_to': '11000', 'salary_gross': 'e',
                            'salary_currency': 'EUR',
                            'area_name': 'Москва', 'published_at': '2022-07-06T02:05:26+0300'})
         result = ['Аналитик', 'Нет данных', 'Python\nHTML', 'От 3 до 6 лет', 'Нет', 'Нет данных',
