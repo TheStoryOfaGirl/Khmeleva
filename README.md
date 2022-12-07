@@ -48,11 +48,31 @@ def check_published(date):
 
 ![datatime](https://user-images.githubusercontent.com/106344305/206182600-9885410d-164a-40bb-8f46-81794ca236ae.png)
 
-
 - Оказалось, что быстрее работает второй способ, но было решено сохранить первую версию с использованием библиотеки datetime, так как читабельность кода лучше.
 
 - Попробовала осуществить изменение метода очищения строки от лишних символов (метод formatting_str)
 
+```py
+def formatting_str(self, raw_html):
+  for i in range(len(raw_html)):
+      while raw_html[i].find('<') > -1:
+          index1 = raw_html[i].find('<')
+          index2 = raw_html[i].find('>')
+          raw_html[i] = raw_html[i][:index1] + raw_html[i][index2 + 1:]
+      if '\n' not in raw_html[i]:
+          raw_html[i] = " ".join(raw_html[i].split())
+  return raw_html
+```
+
+- Время работы в профилизаторе:
+
+![formatting](https://user-images.githubusercontent.com/106344305/206183485-76460f7c-fda0-4cf6-853f-4e36bb18c747.png)
+
+- Время работы в профилизаторе первоначальной версии:
+
+![datatime](https://user-images.githubusercontent.com/106344305/206183601-34088a5e-84a2-4781-866d-0401b8523463.png)
+
+- Оказалось, что обе версии работают примерно одинаково, поэтому было решено оставить старую версию метода.
 
 
 
