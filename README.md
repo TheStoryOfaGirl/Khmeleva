@@ -7,3 +7,52 @@
 
 ![image](https://user-images.githubusercontent.com/106344305/205137351-2a53169b-dc25-4590-9419-91e36d9ac0c6.png)
 
+### Задача 2.3.3
+
+- Запустила профилизатор в PyCharm, обнаружилось, что одни из самых затратных функций - check_published (изменение формата даты) и formatting_str (очищение строки от лишних символов).
+
+![datatime](https://user-images.githubusercontent.com/106344305/206180335-870b2830-d700-4733-8512-23dceff98b46.png)
+
+- Попробовала осуществить изменение формата даты несколькими способами (метод check_published):
+1) С использованием библиотеки dateutil
+
+```py
+def check_published(date):
+   return parse(date).strftime('%d.%m.%Y')
+```
+
+- Время работы в профилизаторе:
+
+![parse](https://user-images.githubusercontent.com/106344305/206182321-61993f1c-7b20-490b-b5f3-a946d1da65f1.png)
+
+
+2) С помощью форматирования строки
+
+```py
+def check_published(date):
+  date = date[:date.find('T')].split('-')
+  return '.'.join(reversed(date))
+```
+- Время работы в профилизаторе:
+
+![строка](https://user-images.githubusercontent.com/106344305/206182418-b38fc18c-7923-40b4-82c7-063b09e0dfc5.png)
+
+
+3) C использованием библиотеки datetime (первоначальная версия)
+
+```py
+def check_published(date):
+  return datetime.datetime.strptime(date, '%Y-%m-%dT%H:%M:%S%z').strftime('%d.%m.%Y')
+```
+- Время работы в профилизаторе:
+
+![datatime](https://user-images.githubusercontent.com/106344305/206182600-9885410d-164a-40bb-8f46-81794ca236ae.png)
+
+
+- Оказалось, что быстрее работает второй способ, но было решено сохранить первую версию с использованием библиотеки datetime, так как читабельность кода лучше.
+
+- Попробовала осуществить изменение метода очищения строки от лишних символов (метод formatting_str)
+
+
+
+
