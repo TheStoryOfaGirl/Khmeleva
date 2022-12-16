@@ -94,4 +94,11 @@ def formatting_str(self, raw_html):
 
 - Можно заметить, что время выполнения уменьшилось примерно на 10 секунд.
 
+### Задача 3.2.3
+
+- Время работы с использованием concurrent.futures(Process):
+
+![image](https://user-images.githubusercontent.com/106344305/208094824-1a6a50e2-10d1-4d12-8101-ba2a998d8bed.png)
+
+
 
