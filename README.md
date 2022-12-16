@@ -100,5 +100,6 @@ def formatting_str(self, raw_html):
 
 ![image](https://user-images.githubusercontent.com/106344305/208094824-1a6a50e2-10d1-4d12-8101-ba2a998d8bed.png)
 
+- В сравнении с multiprocessing данная реализация работает чуть дольше.
 
 
