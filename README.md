@@ -102,4 +102,11 @@ def formatting_str(self, raw_html):
 
 - В сравнении с multiprocessing данная реализация работает чуть дольше.
 
+### Задача 3.3.1
+
+- Частотность, с которой встречаются различные валюты:
+
+![2022-12-19 (2)](https://user-images.githubusercontent.com/106344305/208485502-b1282d51-e216-4f1c-9c88-43cac97e7c93.png)
+
+
 
