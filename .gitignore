@@ -5,5 +5,9 @@
 /Задача 2.1.1.py
 /Задача 2.1.2.py
 /main.py
+/vacancies_dif_currencies.csv
+/*.csv
+/data_currency.csv
+/data_currency
 /__pycache__
 /csv_files/*.csv
