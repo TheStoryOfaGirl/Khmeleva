@@ -108,5 +108,16 @@ def formatting_str(self, raw_html):
 
 ![2022-12-19 (2)](https://user-images.githubusercontent.com/106344305/208485502-b1282d51-e216-4f1c-9c88-43cac97e7c93.png)
 
+### Задача 3.3.2
+
+- Сформированный csv-файл с первыми 100 профессиями
+
+![2022-12-21](https://user-images.githubusercontent.com/106344305/208905886-b9191f3d-b5ed-4d6c-aa20-b5cf3133d96c.png)
+
+![2022-12-21 (1)](https://user-images.githubusercontent.com/106344305/208906018-e3f4bf16-dec2-473c-ab7f-9fbbbfedabce.png)
+
+![2022-12-21 (2)](https://user-images.githubusercontent.com/106344305/208905964-8caaf85d-ed81-49fe-b253-26166ffc1577.png)
+
+![2022-12-21 (3)](https://user-images.githubusercontent.com/106344305/208906058-bf48326f-03b9-4f32-848e-ff3a59c55b0f.png)
 
 
