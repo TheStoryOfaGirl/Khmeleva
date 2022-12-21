@@ -9,5 +9,6 @@
 /*.csv
 /data_currency.csv
 /data_currency
+/vacancies_result.csv
 /__pycache__
 /csv_files/*.csv
