@@ -134,6 +134,12 @@ def formatting_str(self, raw_html):
 
 ### Задача 3.5.3
 
+- Код программы:
+
+![2022-12-28 (10)](https://user-images.githubusercontent.com/106344305/209838338-fbdccbb3-9926-40bc-925c-a0fd7dd0e2b5.png)
+![2022-12-28 (11)](https://user-images.githubusercontent.com/106344305/209838343-5eb0cc5c-0ffc-416b-87f1-e69a71710ff6.png)
+
+
 - Результаты вывода программы:
 
 ![2022-12-28 (1)](https://user-images.githubusercontent.com/106344305/209837713-5ea0f637-d872-4513-a8cd-da037b2ed688.png)
