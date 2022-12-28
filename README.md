@@ -132,4 +132,18 @@ def formatting_str(self, raw_html):
 
 ![2022-12-28](https://user-images.githubusercontent.com/106344305/209799799-1d125f94-ecf6-419c-a6bc-032a7973dbea.png)
 
+### Задача 3.5.3
+
+- Результаты вывода программы:
+
+![2022-12-28 (1)](https://user-images.githubusercontent.com/106344305/209837713-5ea0f637-d872-4513-a8cd-da037b2ed688.png)
+![2022-12-28 (2)](https://user-images.githubusercontent.com/106344305/209837728-362de3a0-193e-42b2-8772-d1dcfd929337.png)
+![2022-12-28 (3)](https://user-images.githubusercontent.com/106344305/209837735-8913f653-67f7-471e-9140-4f9f7cad4f74.png)
+![2022-12-28 (4)](https://user-images.githubusercontent.com/106344305/209837744-92f4cf55-72a6-40b4-bcfd-b07321733c09.png)
+![2022-12-28 (5)](https://user-images.githubusercontent.com/106344305/209837751-d1eadf01-6896-4a4f-b68a-137e8cbd6a03.png)
+![2022-12-28 (6)](https://user-images.githubusercontent.com/106344305/209837754-530df74c-0067-46af-badf-fab780c5d4cc.png)
+![2022-12-28 (7)](https://user-images.githubusercontent.com/106344305/209837756-616f209f-d755-47d8-bde5-c7797ca913b0.png)
+
+
+
 
