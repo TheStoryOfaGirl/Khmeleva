@@ -8,26 +8,47 @@ from Task232 import DataSet, InputConectStatistics, Report
 
 
 def get_statistic_by_year(f, vacancy, statistics):
+    """Формирует статистики для принимаего года
+
+        Args:
+            file(str): Название файла
+            vacancy(str): Название вакансии
+            statistics(List[Dict[int, Any]]): Список статистик по годам
+        Returns:
+            List[Dict[int, Any]]: Сформированный список статистик по годам
+    """
     df = pd.read_csv(f)
     df["salary"] = df[['salary_from', 'salary_to']].mean(axis=1)
     year = int(f[15:19])
     statistics[0] = (year, int(df["salary"].mean()))
-    statistics[1] = (year, df[df['name'] == vacancy]['salary'].mean())
+    statistics[1] = (year, int(df[df['name'] == vacancy]['salary'].mean()))
     statistics[2] = (year, len(df))
     statistics[3] = (year, len(df[df["name"] == vacancy]))
     return statistics
 
-def get_statistic_by_city(file):
-    df = pd.read_csv(file)
-    df["salary"] = df[['salary_from', 'salary_to']].mean(axis=1)
-    cities = df["area_name"].unique()
-    stat1 = {city: [] for city in cities}
-    stat2 = {city: 0 for city in cities}
-    for city in cities:
-        stat1[city] = int(df[df['area_name'] == city]['salary'].mean())
-        stat2[city] = round(len(df[df['area_name'] == city]) / len(df), 4)
-    return [stat1, stat2]
+def get_statistic_city(dataSet, outputer):
+    """Формирует статистики по городам
 
+        Args:
+            dataSet(DataSet): Данные из файла
+            outputer(InputConectStatistics): Статистика по вакансиям
+        Returns:
+            List[Any]: Список статистик по годам
+    """
+    dict_city_count = {}
+    for vac in dataSet.vacancies_objects:
+        if vac.area_name not in dict_city_count.keys():
+            dict_city_count[vac.area_name] = 0
+        dict_city_count[vac.area_name] += 1
+    new_vacancies_objects = list(
+        filter(lambda vac: int(len(dataSet.vacancies_objects) * 0.01) <= dict_city_count[vac.area_name],
+               dataSet.vacancies_objects))
+    res_city = dict(sorted(outputer.get_salary_level(new_vacancies_objects, "area_name").items(), key=lambda x: x[1],
+                           reverse=True)[:10])
+    res_city_vac = dict(
+        sorted(outputer.get_count_vacancy(new_vacancies_objects, "area_name", dataSet).items(), key=lambda x: x[1],
+               reverse=True)[:10])
+    return [res_city, res_city_vac]
 
 if __name__ == '__main__':
     file = input('Введите название файла: ')
@@ -55,19 +76,7 @@ if __name__ == '__main__':
 
     dataSet = DataSet(file)
     outputer = InputConectStatistics()
-    dict_city_count = {}
-    for vac in dataSet.vacancies_objects:
-        if vac.area_name not in dict_city_count.keys():
-            dict_city_count[vac.area_name] = 0
-        dict_city_count[vac.area_name] += 1
-    new_vacancies_objects = list(
-        filter(lambda vac: int(len(dataSet.vacancies_objects) * 0.01) <= dict_city_count[vac.area_name],
-               dataSet.vacancies_objects))
-    res_city = dict(sorted(outputer.get_salary_level(new_vacancies_objects, "area_name").items(), key=lambda x: x[1],
-                           reverse=True)[:10])
-    res_city_vac = dict(
-        sorted(outputer.get_count_vacancy(new_vacancies_objects, "area_name", dataSet).items(), key=lambda x: x[1],
-               reverse=True)[:10])
+    res_city, res_city_vac = get_statistic_city(dataSet, outputer)
     statistics = [salary_by_years, vac_salary_by_year, vac_by_years, vac_count_by_years, res_city, res_city_vac]
     rp = Report()
     rp.generate_excel(vacancy, statistics)
@@ -77,8 +86,6 @@ if __name__ == '__main__':
     print("Динамика уровня зарплат по годам для выбранной профессии:", vac_salary_by_year)
     print("Динамика количества вакансий по годам:", vac_by_years)
     print("Динамика количества вакансий по годам для выбранной профессии:", vac_count_by_years)
-    # print(f'Уровень зарплат по городам (в порядке убывания): {res_city}')
-    # print(f'Доля вакансий по городам (в порядке убывания): {res_city_vac}')
 
 
 

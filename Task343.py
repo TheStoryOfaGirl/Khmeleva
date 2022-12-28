@@ -9,6 +9,16 @@ from Task232 import Report
 
 
 def get_statistic_by_year(f, vacancy, area_name, statistics):
+    """Формирует статистики для принимаего года
+
+        Args:
+            f(str): Название файла
+            vacancy(str): Название вакансии
+            area_name(str): Название региона
+            statistics(List[Dict[int, Any]]): Список статистик по годам
+        Returns:
+            List[Any]: Сформированный список статистик по годам
+    """
     df = pd.read_csv(f)
     df["salary"] = df[['salary_from', 'salary_to']].mean(axis=1)
     year = int(f[15:19])
@@ -21,6 +31,14 @@ def get_statistic_by_year(f, vacancy, area_name, statistics):
     return statistics
 
 def get_statistic_by_city(file):
+    """Формирует статистики по городам
+
+        Args:
+            file(str): Название файла
+
+        Returns:
+            List[Any]: Сформированный список статистик по городам
+    """
     df = pd.read_csv(file)
     df = df[df['area_name'].map(df['area_name'].value_counts()) > len(df) * 0.01]
     df["salary"] = df[['salary_from', 'salary_to']].mean(axis=1)

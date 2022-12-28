@@ -120,4 +120,16 @@ def formatting_str(self, raw_html):
 
 ![2022-12-21 (3)](https://user-images.githubusercontent.com/106344305/208906058-bf48326f-03b9-4f32-848e-ff3a59c55b0f.png)
 
+### Задача 3.5.1
+
+- Сформированная база данных с валютами
+
+![2022-12-27](https://user-images.githubusercontent.com/106344305/209675336-a4762b97-46d6-4f91-b09f-247a0335f85c.png)
+
+### Задача 3.5.2
+
+- Новая таблица vacancies в базе данных currencies.db
+
+![2022-12-28](https://user-images.githubusercontent.com/106344305/209799799-1d125f94-ecf6-419c-a6bc-032a7973dbea.png)
+
 
