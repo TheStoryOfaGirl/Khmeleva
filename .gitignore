@@ -12,3 +12,4 @@
 /vacancies_result.csv
 /__pycache__
 /csv_files/*.csv
+/currencies.db
